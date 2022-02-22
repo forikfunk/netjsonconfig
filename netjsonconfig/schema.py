@@ -360,8 +360,8 @@ schema = {
                         {"$ref": "#/definitions/encryption_none"},
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa3_enterprise_ap"},
-                        {"$ref": "#/definitions/encryption_wpa3_2_personal"},
-                        {"$ref": "#/definitions/encryption_wpa3_2_enterprise_ap"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal_mixed"},
+                        {"$ref": "#/definitions/encryption_wpa3_enterprise_ap_mixed"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wps"},
@@ -381,8 +381,8 @@ schema = {
                         {"$ref": "#/definitions/encryption_none"},
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa3_enterprise_sta"},
-                        {"$ref": "#/definitions/encryption_wpa3_2_personal"},
-                        {"$ref": "#/definitions/encryption_wpa3_2_enterprise_sta"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal_mixed"},
+                        {"$ref": "#/definitions/encryption_wpa3_enterprise_sta_mixed"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wep"},
@@ -451,6 +451,19 @@ schema = {
                 }
             }
         },
+        "encryption_cipher_ccmp_required": {
+            "required": ["cipher"],
+            "properties": {
+                "cipher": {
+                    "type": "string",
+                    "enum": ["ccmp"],
+                    "options": {"enum_titles": ["Force CCMP (AES)"]},
+                    "readOnly": True,
+                    "required": True,
+                    "propertyOrder": 3,
+                }
+            },
+        },
         "encryption_mfp_property": {
             "properties": {
                 "ieee80211w": {
@@ -469,6 +482,7 @@ schema = {
                     "type": "string",
                     "title": "management frame protection",
                     "enum": ["2"],
+                    "readOnly": True,
                     "options": {"enum_titles": ["required"]},
                     "propertyOrder": 4,
                 }
@@ -480,7 +494,8 @@ schema = {
                 "ieee80211w": {
                     "type": "string",
                     "title": "management frame protection",
-                    "enum": ["1", "2"],
+                    "enum": ["1"],
+                    "readOnly": True,
                     "options": {"enum_titles": ["optional", "required"]},
                     "propertyOrder": 4,
                 }
@@ -490,7 +505,7 @@ schema = {
             "title": "WPA3 only Personal",
             "allOf": [
                 {"$ref": "#/definitions/encryption_base_settings"},
-                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
                 {"$ref": "#/definitions/encryption_mfp_property_required"},
                 {
                     "properties": {
@@ -503,11 +518,11 @@ schema = {
                 },
             ],
         },
-        "encryption_wpa3_2_personal": {
-            "title": "WPA3/WPA2 Personal",
+        "encryption_wpa3_personal_mixed": {
+            "title": "WPA3/WPA2 Personal Mixed Mode",
             "allOf": [
                 {"$ref": "#/definitions/encryption_base_settings"},
-                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
                 {"$ref": "#/definitions/encryption_mfp_property_optional"},
                 {
                     "properties": {
@@ -622,7 +637,7 @@ schema = {
                 }
             }
         },
-        "encryption_wpa3_2_enterprise_base_settings": {
+        "encryption_wpa3_enterprise_mixed_base_settings": {
             "properties": {
                 "protocol": {
                     "type": "string",
@@ -637,19 +652,21 @@ schema = {
             "title": "WPA3 only Enterprise (access point)",
             "allOf": [
                 {"$ref": "#/definitions/encryption_base_settings"},
-                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
                 {"$ref": "#/definitions/encryption_mfp_property_required"},
                 {"$ref": "#/definitions/encryption_wpa3_enterprise_base_settings"},
                 {"$ref": "#/definitions/encryption_wpa_enterprise_ap_base_settings"},
             ],
         },
-        "encryption_wpa3_2_enterprise_ap": {
-            "title": "WPA3/WPA2 Enterprise (access point)",
+        "encryption_wpa3_enterprise_ap_mixed": {
+            "title": "WPA3/WPA2 Enterprise (access point) Mixed Mode",
             "allOf": [
                 {"$ref": "#/definitions/encryption_base_settings"},
-                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
                 {"$ref": "#/definitions/encryption_mfp_property_optional"},
-                {"$ref": "#/definitions/encryption_wpa3_2_enterprise_base_settings"},
+                {
+                    "$ref": "#/definitions/encryption_wpa3_enterprise_mixed_base_settings"
+                },
                 {"$ref": "#/definitions/encryption_wpa_enterprise_ap_base_settings"},
             ],
         },
@@ -657,19 +674,21 @@ schema = {
             "title": "WPA3 only Enterprise (client)",
             "additionalProperties": True,
             "allOf": [
-                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
                 {"$ref": "#/definitions/encryption_mfp_property_required"},
                 {"$ref": "#/definitions/encryption_wpa3_enterprise_base_settings"},
                 {"$ref": "#/definitions/encryption_wpa_enterprise_sta_base_settings"},
             ],
         },
-        "encryption_wpa3_2_enterprise_sta": {
+        "encryption_wpa3_enterprise_sta_mixed": {
             "title": "WPA3/WPA2 Enterprise (client)",
             "additionalProperties": True,
             "allOf": [
-                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
                 {"$ref": "#/definitions/encryption_mfp_property_optional"},
-                {"$ref": "#/definitions/encryption_wpa3_2_enterprise_base_settings"},
+                {
+                    "$ref": "#/definitions/encryption_wpa3_enterprise_mixed_base_settings"
+                },
                 {"$ref": "#/definitions/encryption_wpa_enterprise_sta_base_settings"},
             ],
         },
