@@ -459,7 +459,6 @@ schema = {
                     "enum": ["ccmp"],
                     "options": {"enum_titles": ["Force CCMP (AES)"]},
                     "readOnly": True,
-                    "required": True,
                     "propertyOrder": 3,
                 }
             },
