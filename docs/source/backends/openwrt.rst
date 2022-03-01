@@ -2700,3 +2700,80 @@ Will be rendered as follows::
         list ifname 'loopback'
         list ifname 'wlan0'
         list ifname 'wlan1'
+
+
+
+DHCP Server example
+~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*: 
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "type": "bridge",
+                "stp": false,
+                "bridge_members": [
+                    "eth0.3"
+                ],
+                "name": "cpe",
+                "mtu": 1500,
+                "mac": "",
+                "autostart": true,
+                "disabled": false,
+                "addresses": [
+                    {
+                        "proto": "static",
+                        "family": "ipv4",
+                        "address": "10.20.0.1",
+                        "mask": 24,
+                        "gateway": ""
+                    }
+                ],
+                "network": "",
+                "igmp_snooping": false
+            }
+        ],
+        "dhcp": [
+            {
+                "interface": "cpe",
+                "start": 100,
+                "limit": 150,
+                "leasetime": "12h",
+                "dhcpv4": "server",
+                "dhcpv6": "server",
+                "ra": "server",
+                "config_name": "dhcp",
+                "config_value": "cpe"
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package network
+
+    config interface 'cpe'
+        option auto '1'
+        option enabled '1'
+        option ifname 'eth0.3'
+        option igmp_snooping '0'
+        option ipaddr '10.20.0.1'
+        option mtu '1500'
+        option netmask '255.255.255.0'
+        option proto 'static'
+        option stp '0'
+        option type 'bridge'
+
+    package dhcp
+
+    config dhcp 'cpe'
+        option dhcpv4 'server'
+        option dhcpv6 'server'
+        option interface 'cpe'
+        option leasetime '12h'
+        option limit '150'
+        option ra 'server'
+        option start '100'
